@@ -25,6 +25,8 @@ namespace Completed
 		private bool doingSetup = true;							//Boolean to check if we're setting up board, prevent Player from moving during setup.
 
 	    private ShadowManager _shadowManager;
+	    private ShadowView _shadowView;
+	    private Player _player;
 		
 		//Awake is always called before any Start functions
 		void Awake()
@@ -56,7 +58,9 @@ namespace Completed
 
 	    private void InitShadow()
 	    {
-	        _shadowManager = new ShadowManager();
+	        _shadowView = FindObjectOfType<ShadowView>();
+            _shadowManager = new ShadowManager();
+	        _shadowManager.action = _shadowView.OnReceiveShadowData;
             _shadowManager.Init(boardScript.walls);
 	    }
 
@@ -96,6 +100,8 @@ namespace Completed
 			//Call the SetupScene function of the BoardManager script, pass it current level number.
 			boardScript.SetupScene(level);
 
+		    _player = FindObjectOfType<Player>();
+
             InitShadow();
         }
 		
@@ -113,6 +119,8 @@ namespace Completed
 		//Update is called every frame.
 		void Update()
 		{
+            _shadowManager.CalcLightedEdges(_player.transform.position);
+
 			//Check that playersTurn or enemiesMoving or doingSetup are not currently true.
 			if(playersTurn || enemiesMoving || doingSetup)
 				
