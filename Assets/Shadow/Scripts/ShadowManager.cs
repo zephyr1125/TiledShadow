@@ -10,32 +10,58 @@ namespace zephyr.twodshadow
         /// <summary>
         /// 地图中的所有边缘
         /// </summary>
-        private Dictionary<int, Edge> _dicEdges;
+        private List<Edge> _listEdges;
         /// <summary>
         /// 被照亮的边缘
         /// </summary>
-        private Dictionary<int, Edge> _dicLightedEdges; 
+        private List<Edge> _listLightedEdges; 
 
-        public void Init(BoardManager boardManager)
+        public void Init(GameObject[] wallTiles)
         {
-            GameObject[] wallTiles = boardManager.wallTiles;
-            _dicEdges = new Dictionary<int, Edge>();
+            _listEdges = new List<Edge>();
             for (int i = 0; i < wallTiles.Length; i++)
             {
-                InitAllEdges(wallTiles[i]);
+                _listEdges.AddRange(GetTileEdges(wallTiles[i]));
             }
         }
 
         /// <summary>
-        /// 传入tile块构造edge数据
-        /// 假定：tile都为方形，且居中绘制
+        /// 获取指定tile块的所有边edge
+        /// 假定：tile都为矩形，且居中绘制
         /// </summary>
         /// <param name="tileObject"></param>
-        private void InitAllEdges(GameObject tile)
+        private Edge[] GetTileEdges(GameObject tile)
         {
-            //1.构造出4个边，各自中点
+            //1.构造出4个边
+            Vector2 center = tile.transform.position;
             Sprite sprite = tile.GetComponent<SpriteRenderer>().sprite;
-            Debug.Log(sprite);
+            float extendX = sprite.bounds.extents.x;
+            float extendY = sprite.bounds.extents.y;
+
+            //顺序：左下、左上、右上、右下
+            Vector2[] vertices = new[]
+            {
+                new Vector2(center.x - extendX, center.y - extendY),
+                new Vector2(center.x - extendX, center.y + extendY),
+                new Vector2(center.x + extendX, center.y + extendY),
+                new Vector2(center.x + extendX, center.y - extendY),
+            };
+
+            return new[]
+            {
+                new Edge(vertices[0], vertices[1], center),
+                new Edge(vertices[1], vertices[2], center),
+                new Edge(vertices[2], vertices[3], center),
+                new Edge(vertices[3], vertices[0], center),
+            };
+        }
+        
+        /// <summary>
+        /// 计算并存储所有被照亮的边缘
+        /// </summary>
+        public void CalcLightedEdges()
+        {
+            
         }
     }
 }

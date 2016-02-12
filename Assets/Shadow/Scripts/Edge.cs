@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace zephyr.twodshadow
 {
     /// <summary>
-    /// 光照边缘的存储类
+    /// 光照边缘
     /// </summary>
     public class Edge
     {
@@ -14,9 +14,14 @@ namespace zephyr.twodshadow
         public Vector2 PointStart, PointMiddle, PointEnd;
 
         /// <summary>
-        /// 前一个与后一个边缘的ID
+        /// 所在tile的中心点，用于计算是否应该被照亮
         /// </summary>
-        public int Prev, Next;
+        public Vector2 PointCenter;
+
+        /// <summary>
+        /// 前一个与后一个被照亮的边缘
+        /// </summary>
+        public Edge Prev, Next;
 
         /// <summary>
         /// 与光源的距离
@@ -29,12 +34,13 @@ namespace zephyr.twodshadow
         /// </summary>
         /// <param name="pointStart"></param>
         /// <param name="pointEnd"></param>
-        /// <param name="projecter"></param>
-        public Edge(Vector2 pointStart, Vector2 pointEnd)
+        /// <param name="pointCenter"></param>
+        public Edge(Vector2 pointStart, Vector2 pointEnd, Vector2 pointCenter)
         {
             PointStart = pointStart;
             PointEnd = pointEnd;
-            PointMiddle = new Vector2(pointStart.x + pointEnd.x, pointEnd.y + pointEnd.y)/2;
+            PointCenter = pointCenter;
+            PointMiddle = new Vector2(pointStart.x + pointEnd.x, pointStart.y + pointEnd.y)/2;
         }
     }
 }

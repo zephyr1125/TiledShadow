@@ -39,7 +39,11 @@ namespace Completed
 		
 		private Transform boardHolder;									//A variable to store a reference to the transform of our Board object.
 		private List <Vector3> gridPositions = new List <Vector3> ();	//A list of possible locations to place tiles.
-		
+
+        /// <summary>
+        /// 地图中的墙块列表
+        /// </summary>
+	    public GameObject[] walls; 
 		
 		//Clears our list gridPositions and prepares it to generate a new board.
 		void InitialiseList ()
@@ -108,11 +112,12 @@ namespace Completed
 		
 		
 		//LayoutObjectAtRandom accepts an array of game objects to choose from along with a minimum and maximum range for the number of objects to create.
-		void LayoutObjectAtRandom (GameObject[] tileArray, int minimum, int maximum)
+		private GameObject[] LayoutObjectAtRandom (GameObject[] tileArray, int minimum, int maximum)
 		{
 			//Choose a random number of objects to instantiate within the minimum and maximum limits
 			int objectCount = Random.Range (minimum, maximum+1);
-			
+			GameObject[] result = new GameObject[objectCount];
+
 			//Instantiate objects until the randomly chosen limit objectCount is reached
 			for(int i = 0; i < objectCount; i++)
 			{
@@ -123,8 +128,10 @@ namespace Completed
 				GameObject tileChoice = tileArray[Random.Range (0, tileArray.Length)];
 				
 				//Instantiate tileChoice at the position returned by RandomPosition with no change in rotation
-				Instantiate(tileChoice, randomPosition, Quaternion.identity);
+				result[i] = Instantiate(tileChoice, randomPosition, Quaternion.identity) as GameObject;
 			}
+
+		    return result;
 		}
 		
 		
@@ -138,7 +145,7 @@ namespace Completed
 			InitialiseList ();
 			
 			//Instantiate a random number of wall tiles based on minimum and maximum, at randomized positions.
-			LayoutObjectAtRandom (wallTiles, wallCount.minimum, wallCount.maximum);
+			walls = LayoutObjectAtRandom (wallTiles, wallCount.minimum, wallCount.maximum);
 			
 			//Instantiate a random number of food tiles based on minimum and maximum, at randomized positions.
 			LayoutObjectAtRandom (foodTiles, foodCount.minimum, foodCount.maximum);

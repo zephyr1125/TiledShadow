@@ -52,14 +52,12 @@ namespace Completed
 			
 			//Call the InitGame function to initialize the first level 
 			InitGame();
-
-		    InitShadow();
 		}
 
 	    private void InitShadow()
 	    {
 	        _shadowManager = new ShadowManager();
-            _shadowManager.Init(boardScript);
+            _shadowManager.Init(boardScript.walls);
 	    }
 
 		//This is called each time a scene is loaded.
@@ -97,15 +95,16 @@ namespace Completed
 			
 			//Call the SetupScene function of the BoardManager script, pass it current level number.
 			boardScript.SetupScene(level);
-			
-		}
+
+            InitShadow();
+        }
 		
 		
 		//Hides black image used between levels
 		void HideLevelImage()
 		{
-			//Disable the levelImage gameObject.
-			levelImage.SetActive(false);
+            //Disable the levelImage gameObject.
+            levelImage.SetActive(false);
 			
 			//Set doingSetup to false allowing player to move again.
 			doingSetup = false;
