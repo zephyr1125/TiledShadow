@@ -30,6 +30,13 @@ namespace zephyr.twodshadow
 
         public bool IsFaceToLight;
 
+        public enum Direction
+        {
+            Left, Top, Right, Bottom
+        }
+
+        public Direction Dir;
+
         /// <summary>
         /// 基于起始点、终点和进行构造
         /// warning: 构造完毕后Distance,Prev与Next并没有赋值
@@ -37,11 +44,12 @@ namespace zephyr.twodshadow
         /// <param name="pointStart"></param>
         /// <param name="pointEnd"></param>
         /// <param name="pointCenter"></param>
-        public Edge(Vector2 pointStart, Vector2 pointEnd, Vector2 pointCenter)
+        public Edge(Vector2 pointStart, Vector2 pointEnd, Vector2 pointCenter, Direction dir)
         {
             PointStart = pointStart;
             PointEnd = pointEnd;
             PointCenter = pointCenter;
+            Dir = dir;
             PointMiddle = new Vector2(pointStart.x + pointEnd.x, pointStart.y + pointEnd.y)/2;
         }
 
@@ -64,10 +72,10 @@ namespace zephyr.twodshadow
 
             return new[]
             {
-                new Edge(vertices[0], vertices[1], center),
-                new Edge(vertices[1], vertices[2], center),
-                new Edge(vertices[2], vertices[3], center),
-                new Edge(vertices[3], vertices[0], center),
+                new Edge(vertices[0], vertices[1], center, Direction.Left),
+                new Edge(vertices[1], vertices[2], center, Direction.Top),
+                new Edge(vertices[2], vertices[3], center, Direction.Right),
+                new Edge(vertices[3], vertices[0], center, Direction.Bottom),
             };
         }
 

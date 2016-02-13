@@ -61,7 +61,6 @@ namespace Completed
 	        _shadowView = FindObjectOfType<ShadowView>();
             _shadowManager = new ShadowManager();
 	        _shadowManager.action = _shadowView.OnReceiveShadowData;
-            _shadowManager.Init(boardScript.ListWalls);
 	    }
 
 		//This is called each time a scene is loaded.
@@ -119,8 +118,10 @@ namespace Completed
 		//Update is called every frame.
 		void Update()
 		{
-            _shadowManager.CalcLightedEdges(_player.transform.position);
-
+		    if (Input.GetKeyUp(KeyCode.T))
+		    {
+                _shadowManager.CalcLightedEdges(boardScript.ListWalls, _player.transform.position);
+            }
 			//Check that playersTurn or enemiesMoving or doingSetup are not currently true.
 			if(playersTurn || enemiesMoving || doingSetup)
 				
@@ -179,9 +180,9 @@ namespace Completed
 			}
 			//Once Enemies are done moving, set playersTurn to true so player can move.
 			playersTurn = true;
-			
-			//Enemies are done moving, set enemiesMoving to false.
-			enemiesMoving = false;
+
+            //Enemies are done moving, set enemiesMoving to false.
+            enemiesMoving = false;
 		}
 	}
 }
