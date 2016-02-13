@@ -22,11 +22,11 @@ namespace zephyr.twodshadow
         /// </summary>
         public Action<DataShadow> action; 
 
-        public void Init(GameObject[] wallTiles)
+        public void Init(List<GameObject> wallTiles)
         {
             _listEdges.Clear();
 
-            for (int i = 0; i < wallTiles.Length; i++)
+            for (int i = 0; i < wallTiles.Count; i++)
             {
                 _listEdges.AddRange(Edge.GetEdgesOfTile(wallTiles[i]));
             }

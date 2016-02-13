@@ -28,7 +28,7 @@ namespace Completed
 		
 		public int columns = 8; 										//Number of columns in our game board.
 		public int rows = 8;											//Number of rows in our game board.
-		public Count wallCount = new Count (5, 9);						//Lower and upper limit for our random number of walls per level.
+		public Count wallCount = new Count (5, 9);						//Lower and upper limit for our random number of ListWalls per level.
 		public Count foodCount = new Count (1, 5);						//Lower and upper limit for our random number of food items per level.
 		public GameObject exit;											//Prefab to spawn for exit.
 		public GameObject[] floorTiles;									//Array of floor prefabs.
@@ -43,7 +43,7 @@ namespace Completed
         /// <summary>
         /// 地图中的墙块列表
         /// </summary>
-	    public GameObject[] walls; 
+	    public List<GameObject> ListWalls = new List<GameObject>(); 
 		
 		//Clears our list gridPositions and prepares it to generate a new board.
 		void InitialiseList ()
@@ -64,7 +64,7 @@ namespace Completed
 		}
 		
 		
-		//Sets up the outer walls and floor (background) of the game board.
+		//Sets up the outer ListWalls and floor (background) of the game board.
 		void BoardSetup ()
 		{
 			//Instantiate Board and set boardHolder to its transform.
@@ -78,10 +78,14 @@ namespace Completed
 				{
 					//Choose a random tile from our array of floor tile prefabs and prepare to instantiate it.
 					GameObject toInstantiate = floorTiles[Random.Range (0,floorTiles.Length)];
-					
+
+				    bool isOuterWall = false;
 					//Check if we current position is at board edge, if so choose a random outer wall prefab from our array of outer wall tiles.
-					if(x == -1 || x == columns || y == -1 || y == rows)
-						toInstantiate = outerWallTiles [Random.Range (0, outerWallTiles.Length)];
+				    if (x == -1 || x == columns || y == -1 || y == rows)
+				    {
+				        isOuterWall = true;
+                        toInstantiate = outerWallTiles[Random.Range(0, outerWallTiles.Length)];
+                    }
 					
 					//Instantiate the GameObject instance using the prefab chosen for toInstantiate at the Vector3 corresponding to current grid position in loop, cast it to GameObject.
 					GameObject instance =
@@ -89,6 +93,11 @@ namespace Completed
 					
 					//Set the parent of our newly instantiated object instance to boardHolder, this is just organizational to avoid cluttering hierarchy.
 					instance.transform.SetParent (boardHolder);
+
+				    if (isOuterWall)
+				    {
+				        ListWalls.Add(instance);
+				    }
 				}
 			}
 		}
@@ -138,14 +147,16 @@ namespace Completed
 		//SetupScene initializes our level and calls the previous functions to lay out the game board
 		public void SetupScene (int level)
 		{
-			//Creates the outer walls and floor.
-			BoardSetup ();
+            ListWalls.Clear();
+
+            //Creates the outer ListWalls and floor.
+            BoardSetup ();
 			
 			//Reset our list of gridpositions.
 			InitialiseList ();
 			
 			//Instantiate a random number of wall tiles based on minimum and maximum, at randomized positions.
-			walls = LayoutObjectAtRandom (wallTiles, wallCount.minimum, wallCount.maximum);
+			ListWalls.AddRange(LayoutObjectAtRandom (wallTiles, wallCount.minimum, wallCount.maximum));
 			
 			//Instantiate a random number of food tiles based on minimum and maximum, at randomized positions.
 			LayoutObjectAtRandom (foodTiles, foodCount.minimum, foodCount.maximum);

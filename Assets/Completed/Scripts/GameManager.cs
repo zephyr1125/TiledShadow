@@ -61,7 +61,7 @@ namespace Completed
 	        _shadowView = FindObjectOfType<ShadowView>();
             _shadowManager = new ShadowManager();
 	        _shadowManager.action = _shadowView.OnReceiveShadowData;
-            _shadowManager.Init(boardScript.walls);
+            _shadowManager.Init(boardScript.ListWalls);
 	    }
 
 		//This is called each time a scene is loaded.
