@@ -134,7 +134,15 @@ namespace zephyr.twodshadow
                     if (edgeInterSect != null)
                     {
                         edgeInterSect.PointStart = interSectPos;
+                        if (edgeInterSect.Prev != null)
+                        {
+                            edgeInterSect.Prev.Next = null;
+                        }
                         edgeInterSect.Prev = edge;
+                        if (edge.Next != null)
+                        {
+                            edge.Next.Prev = null;
+                        }
                         edge.Next = edgeInterSect;
                     }
                 }
@@ -145,7 +153,15 @@ namespace zephyr.twodshadow
                     if (edgeInterSect != null)
                     {
                         edgeInterSect.PointEnd = interSectPos;
+                        if (edgeInterSect.Next != null)
+                        {
+                            edgeInterSect.Next.Prev = null;
+                        }
                         edgeInterSect.Next = edge;
+                        if (edge.Prev != null)
+                        {
+                            edge.Prev.Next = null;
+                        }
                         edge.Prev = edgeInterSect;
                     }
                 }
@@ -224,25 +240,29 @@ namespace zephyr.twodshadow
 
         private void CleanIsolatedEdges()
         {
-            _listLightedEdges.RemoveAll(edge =>
+            int removed = 0;
+            do
             {
-                bool clean = edge.Prev == null || edge.Next == null;
-                if (clean)
+                removed = _listLightedEdges.RemoveAll(edge =>
                 {
-                    if (edge.Prev != null)
+                    bool clean = edge.Prev == null || edge.Next == null;
+                    if (clean)
                     {
-                        edge.Prev.Next = null;
-                        edge.Prev = null;
-                    }
+                        if (edge.Prev != null)
+                        {
+                            edge.Prev.Next = null;
+                            edge.Prev = null;
+                        }
 
-                    if (edge.Next != null)
-                    {
-                        edge.Next.Prev = null;
-                        edge.Next = null;
+                        if (edge.Next != null)
+                        {
+                            edge.Next.Prev = null;
+                            edge.Next = null;
+                        }
                     }
-                }
-                return clean;
-            });
+                    return clean;
+                });
+            } while (removed > 0);
         }
     }
 }
