@@ -118,10 +118,10 @@ namespace Completed
 		//Update is called every frame.
 		void Update()
 		{
-		    if (Input.GetKeyUp(KeyCode.T))
-		    {
+		    //if (Input.GetKeyUp(KeyCode.T))
+		    //{
                 _shadowManager.CalcLightedEdges(boardScript.ListWalls, _player.transform.position);
-            }
+            //}
 			//Check that playersTurn or enemiesMoving or doingSetup are not currently true.
 			if(playersTurn || enemiesMoving || doingSetup)
 				

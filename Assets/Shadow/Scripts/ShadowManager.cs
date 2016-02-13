@@ -183,8 +183,15 @@ namespace zephyr.twodshadow
                 Edge edge = _listLightedEdges[i];
                 //先寻找交点
                 Vector2? result = LineIntersectionPoint(lightStart, lightThrough, edge.PointStart, edge.PointEnd);
+                if (result == null) continue;
+                //排除落在反方向上的交点，因为这个算法是直线算法，可能会与发光点背后的edge相交
+                if (lightThrough.x >= lightStart.x && result.Value.x < lightStart.x) continue;
+                if (lightThrough.x <= lightStart.x && result.Value.x > lightStart.x) continue;
+                if (lightThrough.y >= lightStart.y && result.Value.y < lightStart.y) continue;
+                if (lightThrough.y <= lightStart.y && result.Value.y > lightStart.y) continue;
                 //注意这个交点是直线交点，不一定落在edge内，因此要进行范围检查
-                if (result == null || !CheckInsideBound(result.Value, edge.PointStart, edge.PointEnd)) continue;
+                if (!CheckInsideBound(result.Value, edge.PointStart, edge.PointEnd)) continue;
+                //得到结果
                 interSectPoint = result.Value;
                 return edge;
             }

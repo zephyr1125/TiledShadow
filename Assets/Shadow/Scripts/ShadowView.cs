@@ -45,7 +45,7 @@ namespace zephyr.twodshadow
             }
         }
 
-        private void CreateLine(Vector2 start, Vector2 end, Color color, float widthStart = 0.05f, float widthEnd = 0.05f)
+        private void CreateLine(Vector2 start, Vector2 end, Color color, float widthStart = 0f, float widthEnd = 0.1f)
         {
             GameObject go = new GameObject("line");
             go.transform.parent = transform;
